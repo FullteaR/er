@@ -16,7 +16,7 @@ def process(tweet):
 if __name__ == "__main__":
     corpus_file = sys.argv[1]
     with open(corpus_file, "r") as fp:
-        corpus = fp.readlines()  # 今回は個人のツイートを対象としているためメモリ管理を気にしていませんが、扱うデータによってはメモリが耐えないかもしれません。
+        corpus = fp.readlines()  # 今回は個人のツイート程度の文量を対象としているためメモリ管理を気にしていませんが、扱うデータによってはメモリが耐えないかもしれません。
         corpus = [process(tweet) for tweet in corpus if process(tweet)]
     with open(corpus_file, "w") as fp:
         fp.writelines(corpus)
