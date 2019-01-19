@@ -2,14 +2,18 @@ import MeCab
 import random
 import time
 import copy
-from tqdm import tqdm
+try:
+    from tqdm import tqdm
+except:
+    def tqdm(iter):
+        return iter
 
 
 class Markov:
     def __init__(self):
         self.BOS = "<BOS>"
         self.EOS = "<EOS>"
-        self.db = {self.BOS:{}}
+        self.db = {self.BOS: {}}
         self.mecab = MeCab.Tagger(
             "-d /usr/local/lib/mecab/dic/mecab-ipadic-neologd/ -Owakati")
 
@@ -29,44 +33,50 @@ class Markov:
     def learn(self, text):
         if text == "":
             return
-        words = [self.BOS] + self.mecab.parse(text).strip().split(" ") + [self.EOS]
+        words = [self.BOS] + \
+            self.mecab.parse(text).strip().split(" ") + [self.EOS]
         while len(words) > 0:
-            dictionary=self.db
-            for i,word in enumerate(words):
+            dictionary = self.db
+            for i, word in enumerate(words):
                 if word in dictionary:
-                    dictionary=dictionary[word]
+                    dictionary = dictionary[word]
                     continue
                 else:
-                    dictionary[word]=self._create_deep_dictionary(words[i+1::])
+                    dictionary[word] = self._create_deep_dictionary(
+                        words[i + 1::])
                     break
             words.pop(0)
         return
 
-    def speak(self, n):
-        keywords=[self.BOS]
-        dictionary=self.db
-        retval=""
+    def speak(self, n, start=None):
+        if (start in self.db.keys()) == False:
+            start = self.BOS
+        keywords = [start]
+        dictionary = self.db
+        retval = []
 
-        while len(keywords)<n:
-            dictionary=dictionary[keywords[-1]]
+        while len(keywords) < n:
+            dictionary = dictionary[keywords[-1]]
             try:
-                next=random.choice(list(dictionary.keys()))
-            except IndexError:#nextが存在しない
-                keywords=[self.BOS]
-                dictionary=self.db
+                next = random.choice(list(dictionary.keys()))
+            except IndexError:  # nextが存在しない
+                keywords = [self.BOS]
+                dictionary = self.db
                 continue
-            next=str(next)
+            next = str(next)
             keywords.append(next)
-        retval="".join(keywords)
-        while keywords[-1]!=self.EOS:
-            dictionary=self.db
+        retval = copy.copy(keywords)
+        while keywords[-1] != self.EOS:
+            dictionary = self.db
             for keyword in keywords:
-                dictionary=dictionary[keyword]
-            next=random.choice(list(dictionary.keys()))
+                dictionary = dictionary[keyword]
+            next = random.choice(list(dictionary.keys()))
             keywords.pop(0)
             keywords.append(next)
-            retval+=next
-        return retval
+            retval.append(next)
+        # retval.pop(0)#remove BOS
+        retval.pop(-1)
+        return "".join(retval)
 
 
 if __name__ == "__main__":
@@ -78,8 +88,6 @@ if __name__ == "__main__":
         txt = [t.strip() for t in txt]
         for t in tqdm(txt):
             er.learn(t)
-
-    for i in range(10):
-        print(er.speak(2))
-    for i in range(10):
-        print(er.speak(5))
+    while True:
+        s = input()
+        print(er.speak(2, s))
