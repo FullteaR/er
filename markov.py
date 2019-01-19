@@ -91,10 +91,13 @@ if __name__ == "__main__":
         text=input()
         m=MeCab.Tagger(
             "-d /usr/local/lib/mecab/dic/mecab-ipadic-neologd/")
-        words=[er.BOS]
+        #words=[er.BOS]
+        words=[]
         for l in m.parse(text).split("\n"):
             if ("\t" in l)==False:
                 continue
             if l.split("\t")[1].split(",")[0]==("名詞" or "形容詞" or "形容動詞"):
                 words.append(l.split("\t")[0])
+        if words==[]:
+            words=[er.BOS]
         print(er.speak(2,random.choice(words)))
