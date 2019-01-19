@@ -74,8 +74,6 @@ class Markov:
             keywords.pop(0)
             keywords.append(next)
             retval.append(next)
-        # retval.pop(0)#remove BOS
-        retval.pop(-1)
         return "".join(retval)
 
 
