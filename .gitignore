@@ -6,3 +6,9 @@ __pycache__/
 \.DS_Store
 
 keys\.py
+
+\.ipynb_checkpoints/
+
+model/
+
+jawiki-latest-pages-articles\.xml\.bz2

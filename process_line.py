@@ -1,7 +1,7 @@
 import re
 import sys
 date = re.compile("^\d{4}/\d{2}/\d{2}\([月火水木金土日]\)$")
-phone = re.compile("^☎ 不在着信$|^☎ 通話時間 [\d:]+$")  # 雑?
+phone = re.compile("^☎ 不在着信$|^☎ 通話時間 [\d:]+$|^☎ 通話をキャンセルしました$|^☎ 通話に応答がありませんでした$")  # 雑?
 
 
 def line(opponent):
@@ -47,7 +47,7 @@ def line(opponent):
 if __name__ == "__main__":
     name = " ".join(sys.argv[1::])
     talk = line(name)
-    with open("./data/line.txt", "w") as fp:
+    with open("./data/talk.txt", "w") as fp:
         fp.writelines("\n".join(talk))
     with open("./data/corpus.txt", "a") as fp:
         for i in talk:
