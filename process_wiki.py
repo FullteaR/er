@@ -2,7 +2,11 @@ from tqdm import tqdm
 import re
 import sys
 import MeCab
-#import hyoukiyure
+
+#usage
+# $python process_wiki.py file_before file_after
+
+
 filename_before = sys.argv[1]
 filename_after=sys.argv[2]
 m = MeCab.Tagger(
@@ -184,7 +188,5 @@ with open(filename_before, "r") as fp_read:
             line=re.sub("[0-9]+","0",line)
             line = line.lower()
             line = m.parse(line)
-            #line=" ".join([hyoukiyure.correct.get(word,word) for word in line.split(" ")])
-            #line=line.replace(" ( 曖昧さ回避 ) ","")
             #line=m_yomi.parse(line)
             fp_write.write(line)
