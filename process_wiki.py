@@ -7,8 +7,6 @@ import MeCab
 # $python process_wiki.py file_before file_after
 
 
-filename_before = sys.argv[1]
-filename_after=sys.argv[2]
 m = MeCab.Tagger(
     "-d /usr/local/lib/mecab/dic/mecab-ipadic-neologd/ -Owakati")
 m_yomi = MeCab.Tagger(
@@ -177,16 +175,18 @@ def han2zen(text, ascii_=True, digit=True, kana=True, kakko=True, ignore=()):
             result.append(c)
     return "".join(result)
 
-
-with open(filename_before, "r") as fp_read:
-    with open(filename_after, "w") as fp_write:
-        for line in tqdm(fp_read):
-            if blank.search(line):
-                continue
-            line = zen2han(line, kana=False)
-            line = han2zen(line, ascii_=False, digit=False, kakko=False)
-            line=re.sub("[0-9]+","0",line)
-            line = line.lower()
-            line = m.parse(line)
-            #line=m_yomi.parse(line)
-            fp_write.write(line)
+if __name__=="__main__":
+    filename_before = sys.argv[1]
+    filename_after=sys.argv[2]
+    with open(filename_before, "r") as fp_read:
+        with open(filename_after, "w") as fp_write:
+            for line in tqdm(fp_read):
+                if blank.search(line):
+                    continue
+                line = zen2han(line, kana=False)
+                line = han2zen(line, ascii_=False, digit=False, kakko=False)
+                line=re.sub("[0-9]+","0",line)
+                line = line.lower()
+                line = m.parse(line)
+                #line=m_yomi.parse(line)
+                fp_write.write(line)
