@@ -6,5 +6,5 @@ logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=lo
 sentences = word2vec.Text8Corpus('./wiki_processed.txt')
 
 model = word2vec.Word2Vec(sentences, size=200, min_count=5, window=20)
-os.mkdir("model")
+os.makedirs("model",exist_ok=True)
 model.save("./model/wiki.model")
