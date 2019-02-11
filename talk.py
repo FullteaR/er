@@ -26,7 +26,7 @@ if __name__ == "__main__":
         for l in m.parse(text).split("\n"):
             if ("\t" in l) == False:
                 continue
-            if l.split("\t")[1].split(",")[0] == ("名詞" or "形容詞" or "形容動詞"):
+            if l.split("\t")[1].split(",")[0] in ("名詞", "形容詞", "形容動詞", "副詞", "感動詞"):
                 words.append(l.split("\t")[0])
         if words == []:
             words = [er.BOS]
